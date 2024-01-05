@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+      background: black     ;
+    }
+  </style>
+  <title>Raindrops</title>
+</head>
+<body>
+  <canvas id="rainCanvas"></canvas>
+
+  <script>
+    // Get the canvas and context
+    const canvas = document.getElementById('rainCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Set canvas size
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Array to store raindrops
+    const raindrops = [];
+
+    // Function to create a new raindrop
+    function createRaindrop() {
+      return {
+        x: Math.random() * canvas.width,
+        y: 0,
+        length: Math.random() * 20 + 5, // Random length
+        speed: Math.random() * 5 + 2 // Random speed
+      };
+    }
+
+    // Function to update and draw the raindrops
+    function drawRaindrops() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < raindrops.length; i++) {
+        const raindrop = raindrops[i];
+        raindrop.y += raindrop.speed;
+
+        // Draw raindrop
+        ctx.beginPath();
+        ctx.moveTo(raindrop.x, raindrop.y);
+        ctx.lineTo(raindrop.x, raindrop.y + raindrop.length);
+        ctx.strokeStyle = '#7fe18b';
+        ctx.stroke();
+
+        // Check if the raindrop is off-screen
+        if (raindrop.y > canvas.height) {
+          // Replace off-screen raindrop with a new one
+          raindrops[i] = createRaindrop();
+        }
+      }
+
+      requestAnimationFrame(drawRaindrops);
+    }
+
+    // Initialize raindrops
+    for (let i = 0; i < 100; i++) {
+      raindrops.push(createRaindrop());
+    }
+
+    // Start animation
+    drawRaindrops();
+
+    // Resize canvas when the window is resized
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
